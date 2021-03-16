@@ -50,8 +50,11 @@ def lambda_handler(event, context):
     alarm_account_id = cloudwatch_alarm["AWSAccountId"]
     alarm_name = cloudwatch_alarm["AlarmName"]
     alarm_description = cloudwatch_alarm["AlarmDescription"]
-    alarm_metric = cloudwatch_alarm["Trigger"]["MetricName"]
-    alarm_metric_namespace = cloudwatch_alarm["Trigger"]["Namespace"]
+    alarm_metric = cloudwatch_alarm["Trigger"].get("MetricName", None)
+    if cloudwatch_alarm["Trigger"].get("MetricName", None):
+        alarm_metric = f'`{cloudwatch_alarm["Trigger"]["Namespace"]}`/`{cloudwatch_alarm["Trigger"]["MetricName"]}`'
+    else:
+        alarm_metric = "Multiple metrics"
     account_information = alarm_account_id
     alarm_arn = cloudwatch_alarm["AlarmArn"]
     alarm_region = alarm_arn.split(":")[3]
@@ -93,8 +96,8 @@ def lambda_handler(event, context):
                         },
                         {
                             "title": "Metric",
-                            "value": f"`{alarm_metric_namespace}`/`{alarm_metric}`",
-                            "short": True,
+                            "value": alarm_metric,
+                            "short": True
                         },
                         {
                             "title": "Region",
