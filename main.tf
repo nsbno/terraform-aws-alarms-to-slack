@@ -9,7 +9,7 @@ locals {
 
 #######################################
 #                                     #
-# Slack alarm forwarder               #
+# Slack SNS forwarder                 #
 #                                     #
 #######################################
 data "archive_file" "this" {
@@ -19,7 +19,7 @@ data "archive_file" "this" {
 }
 
 resource "aws_lambda_function" "this" {
-  function_name    = "${var.name_prefix}-alarms-to-slack"
+  function_name    = "${var.name_prefix}-sns-to-slack"
   role             = aws_iam_role.this.arn
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
