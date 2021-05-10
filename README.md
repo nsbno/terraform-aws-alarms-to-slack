@@ -1,8 +1,10 @@
-# terraform-aws-alarms-to-slack
-A Terraform module that forwards state changes in CloudWatch Alarms to Slack.
+# terraform-aws-sns-to-slack
+A Terraform module that forwards messages from AWS Simple Notification Service (SNS) to Slack.
 
-It uses the alarm description to offer details about the alarm in question.
+The module applies different formatting depending on the type of the message.
 
-An example Slack message looks like this:
-
+Example formatting for an SNS message sent from a CloudWatch Alarm looks like this:
 ![Example Slack Message](example.png)
+
+For other types of messages, the formatting looks like this:
+![Example Slack Message](example2.png)

@@ -4,7 +4,7 @@ variable "name_prefix" {
 }
 
 variable "current_account_alias" {
-  description = "An optional account alias to add to the Slack messages to make it easier to identify the the current account."
+  description = "An optional account alias to add to the Slack messages to make it easier to identify the current account."
   default     = ""
 }
 
