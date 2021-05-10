@@ -22,7 +22,7 @@ OK = "OK"
 FALLBACK = "FALLBACK"
 
 STYLES = {
-    FALLBACK: {"emoji": "❕"},
+    FALLBACK: {"emoji": ":grey_exclamation:"},
     INSUFFICIENT_DATA: {
         "color": "warning",
         "emoji": ":warning:",
