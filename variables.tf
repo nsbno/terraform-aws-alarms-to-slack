@@ -9,8 +9,14 @@ variable "current_account_alias" {
 }
 
 variable "slack_webhook_url" {
-  description = "A Slack webhook URL to post messages to."
+  description = "The default Slack webhook URL to post messages to."
   type        = string
+}
+
+variable "topic_webhook_overrides" {
+  description = "An optional map of SNS topic ARNs and Slack webhook URLs to use instead of the default webhook (i.e., <arn>-<url> pairs)."
+  type        = map(string)
+  default     = {}
 }
 
 variable "sns_topic_arns" {

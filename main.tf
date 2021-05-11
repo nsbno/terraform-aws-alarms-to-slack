@@ -4,6 +4,9 @@ data "aws_region" "this" {}
 locals {
   current_account_id = data.aws_caller_identity.this.account_id
   current_region     = data.aws_region.this.name
+  slack_webhook_urls = {
+    for arn in var.sns_topic_arns : arn => lookup(var.topic_webhook_overrides, arn, var.slack_webhook_url)
+  }
 }
 
 
@@ -30,7 +33,7 @@ resource "aws_lambda_function" "this" {
     variables = {
       CURRENT_ACCOUNT_ID    = local.current_account_id
       CURRENT_ACCOUNT_ALIAS = var.current_account_alias
-      SLACK_WEBHOOK_URL     = var.slack_webhook_url
+      SLACK_WEBHOOK_URLS    = jsonencode(local.slack_webhook_urls)
     }
   }
   tags = var.tags

@@ -195,7 +195,7 @@ def get_slack_message_content(record, account_meta={}):
 
 def lambda_handler(event, context):
     logger.info("Lambda received event '%s'", json.dumps(event))
-    slack_webhook_url = os.environ["SLACK_WEBHOOK_URL"]
+    slack_webhook_urls = json.loads(os.environ["SLACK_WEBHOOK_URLS"])
     current_account_id = os.environ["CURRENT_ACCOUNT_ID"]
     current_account_alias = os.environ["CURRENT_ACCOUNT_ALIAS"]
 
@@ -206,6 +206,8 @@ def lambda_handler(event, context):
 
     # There should only be one record
     record = event["Records"][0]
+    topic_arn = record["Sns"]["TopicArn"]
+    slack_webhook_url = slack_webhook_urls[topic_arn]
     content = get_slack_message_content(record, account_meta)
     data = json.dumps(content).encode("utf-8")
 
