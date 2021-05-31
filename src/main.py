@@ -37,6 +37,12 @@ STYLES = {
     },
 }
 
+# An SNS message attribute that can be used to override
+# the pretext ("title") of the Slack message
+MESSAGE_ATTRIBUTE_NAME_FOR_SLACK_FORMATTING = (
+    "CUSTOM.SLACK_NOTIFICATION.MESSAGE_TITLE"
+)
+
 
 def parse_cloudwatch_alarm_event(record, account_meta={}):
     """Parse a CloudWatch alarm event and return a payload
@@ -72,10 +78,20 @@ def parse_cloudwatch_alarm_event(record, account_meta={}):
         logger.warn("Failed to parse timestamp '%s'", alarm_timestamp)
         parsed_timestamp = None
 
+    custom_pretext = (
+        record["Sns"]["MessageAttributes"]
+        .get(MESSAGE_ATTRIBUTE_NAME_FOR_SLACK_FORMATTING, {})
+        .get("Value", "")
+    )
+    if custom_pretext:
+        pretext = f"{style['emoji']} {custom_pretext}"
+    else:
+        pretext = f"{style['emoji']} CloudWatch Alarm changed state: `{old_state_value}` → `{new_state_value}`"
+
     content = {
         "attachments": [
             {
-                "pretext": f"{style['emoji']} CloudWatch Alarm changed state: `{old_state_value}` → `{new_state_value}`",
+                "pretext": pretext,
                 "color": style["color"],
                 "fields": [
                     {
@@ -141,10 +157,20 @@ def parse_general_event(record, account_meta={}):
     ) == account_id and account_meta.get("current_account_alias", ""):
         account_information += f" (_{account_meta['current_account_alias']}_)"
 
+    custom_pretext = (
+        record["Sns"]["MessageAttributes"]
+        .get(MESSAGE_ATTRIBUTE_NAME_FOR_SLACK_FORMATTING, {})
+        .get("Value", "")
+    )
+    if custom_pretext:
+        pretext = f"{style['emoji']} {custom_pretext}"
+    else:
+        pretext = f"{style['emoji']} {subject}"
+
     content = {
         "attachments": [
             {
-                "pretext": f"{style['emoji']} {subject}",
+                "pretext": pretext,
                 **(
                     {"color": style["color"]}
                     if style.get("color", None)
