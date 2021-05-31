@@ -54,7 +54,7 @@ def parse_cloudwatch_alarm_event(record, account_meta={}):
     old_state_value = cloudwatch_alarm["OldStateValue"]
     alarm_account_id = cloudwatch_alarm["AWSAccountId"]
     alarm_name = cloudwatch_alarm["AlarmName"]
-    alarm_description = cloudwatch_alarm["AlarmDescription"]
+    alarm_description = cloudwatch_alarm["AlarmDescription"] or subject
     alarm_metric = cloudwatch_alarm["Trigger"].get("MetricName", None)
     if cloudwatch_alarm["Trigger"].get("MetricName", None):
         alarm_metric = f'`{cloudwatch_alarm["Trigger"]["Namespace"]}`/`{cloudwatch_alarm["Trigger"]["MetricName"]}`'
