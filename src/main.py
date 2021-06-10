@@ -119,7 +119,7 @@ def parse_cloudwatch_alarm_event(record, account_meta={}):
 def parse_general_event(record, account_meta={}):
     """Parse a general SNS message and return a payload
     to be posted to Slack's webhook API"""
-    subject = record["Sns"]["Subject"]
+    subject = record["Sns"]["Subject"] or "(No subject)"
     style = STYLES[FALLBACK]
     if "has exceeded your alert threshold" in subject:
         style = STYLES[ALARM]
