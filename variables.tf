@@ -8,7 +8,7 @@ variable "current_account_alias" {
   default     = ""
 }
 
-variable "slack_webhook_url" {
+variable "slack_webhook_urls" {
   description = "The default Slack webhook URLs to post messages to."
   type        = list(string)
 }
