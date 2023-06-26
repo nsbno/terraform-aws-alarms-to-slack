@@ -207,17 +207,18 @@ def lambda_handler(event, context):
     # There should only be one record
     record = event["Records"][0]
     topic_arn = record["Sns"]["TopicArn"]
-    slack_webhook_url = slack_webhook_urls[topic_arn]
+    slack_webhook_urls = slack_webhook_urls[topic_arn]
     content = get_slack_message_content(record, account_meta)
     data = json.dumps(content).encode("utf-8")
 
     try:
-        slack_request = urllib.request.Request(
-            slack_webhook_url,
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        urllib.request.urlopen(slack_request)
+        for slack_webhook_url in slack_webhook_urls:
+            slack_request = urllib.request.Request(
+                slack_webhook_url,
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            urllib.request.urlopen(slack_request)
     except:
         logger.exception("Failed to post to Slack")
         raise

@@ -5,7 +5,7 @@ locals {
   current_account_id = data.aws_caller_identity.this.account_id
   current_region     = data.aws_region.this.name
   slack_webhook_urls = {
-    for arn in var.sns_topic_arns : arn => lookup(var.topic_webhook_overrides, arn, var.slack_webhook_url)
+    for arn in var.sns_topic_arns : arn => lookup(var.topic_webhook_overrides, arn, var.slack_webhook_urls)
   }
 }
 
